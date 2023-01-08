@@ -1,10 +1,7 @@
 import React from "react";
-
+import {Link} from 'react-router-dom'
 import { Col, Image, NavLink } from "react-bootstrap";
-import {AiOutlineUser} from 'react-icons/ai'
-import HISTORY_ICON from '../assets/images/history.svg';
 import SETTINGS_ICON from  '../assets/images/settings.svg'
-import PERSON_ICON from '../assets/images/person.svg'
 import RIDEB_ICON from '../assets/images/directionscar.svg'
 import RIDEH_ICON from '../assets/images/ridehistory.svg'
 
@@ -15,7 +12,7 @@ import RIDEH_ICON from '../assets/images/ridehistory.svg'
 export default function SideMenu() {
 
   return (
-
+    <div className="sidebarfinal">
     <Col className="side-menu">
 
       <div>
@@ -24,7 +21,7 @@ export default function SideMenu() {
 
         <span className="ml-4 mt-4 font-25 position-absolute" style={{marginBottom : '1em'}}>
 
-          Hello, <strong>Tony</strong>
+          Hello, <strong>{localStorage.getItem('uname')}</strong>
 
         </span>
 
@@ -36,14 +33,13 @@ export default function SideMenu() {
 
 
       <nav className="flex-column nav">
-
-        <NavLink
+        <Link
 
           style={{ marginTop: 0 }}
 
           className="nav-link position-relative"
 
-          to="discover"
+          to="/"
 
         >
 
@@ -51,15 +47,15 @@ export default function SideMenu() {
 
           <span className="ml-4 mt-3 position-absolute blue-back">Ride Booking</span>
 
-        </NavLink>
+        </Link>
 
-        <NavLink
+        <Link
 
           style={{ marginTop: 30 }}
 
           className="nav-link position-relative mb-"
 
-          to="discover"
+          to="/ridehistory"
 
         >
 
@@ -67,7 +63,7 @@ export default function SideMenu() {
 
           <span className="ml-4 mt-3 position-absolute blue-back">Ride History</span>
 
-        </NavLink>
+        </Link>
 
         {/* <NavLink
 
@@ -86,25 +82,25 @@ export default function SideMenu() {
         </NavLink> */}
 
 
-        <NavLink
+        <Link
 
           style={{ marginTop: 320 }}
 
           className="nav-link mb-4"
 
-          to="discover"
+          to="/account"
 
         >
 
           <Image className="navlink-image " src={SETTINGS_ICON} />
 
           <span className="ml-4 mt-3 position-absolute blue-back">User Account</span>
-        </NavLink>
+        </Link>
 
       </nav>
 
     </Col>
-
+    </div>
   );
 
 }

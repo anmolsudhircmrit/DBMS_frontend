@@ -3,7 +3,7 @@ import { AutoComplete } from "antd";
 import axios from "axios";
 import { MAP_MY_INDIA_ID, MAP_MY_INDIA_SECRET, MAP_MY_INDIA_GRANT } from "../constants";
 
-function DestinationPlacesSearch({testCallback}) {
+function DestinationPlacesSearch({changeDestSelected,testCallback}) {
 
     const opts = [
             {
@@ -113,7 +113,9 @@ function DestinationPlacesSearch({testCallback}) {
     return responseToken;
   };
 
+  let destination;
   const handleOnSelect = (value) => {
+    changeDestSelected(true)
     for(let i = 0; i < eLoc.length; i++){
         if(eLoc[i].label === value){
             testCallback(eLoc[i]);
@@ -128,13 +130,14 @@ function DestinationPlacesSearch({testCallback}) {
         size='large'
         allowClear = {true}
         autoFocus = {true }
-        defaultOpen = {true}
-        onChange={handleOnChange}
+        //defaultOpen = {true}
+        onChange= {(value) => {console.log(value)}}//{handleOnChange}
         //onSearch= {handleOnChange}//{(value) => {console.log(value)}}//{handleOnChange}//
-        options={searchResults}
+        options={opts}
         placeholder="Search Destination" 
-        onSelect = {handleOnSelect}/>
-        onClear = {}
+        onSelect = {(val) => {console.log(val);changeDestSelected(true, val)}}//{handleOnSelect}/>
+        onClear={() => {changeDestSelected(false)}}
+        />
   )
 }
 

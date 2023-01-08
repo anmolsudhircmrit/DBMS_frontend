@@ -191,8 +191,7 @@ textarea {
 }
 
 .card {
-  outline: 1px solid #707070;
-  box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 .login-screen-logo {
@@ -413,35 +412,39 @@ textarea {
 }
 
 .wrapper {
-  display: inline-flex;
-  background: #fff;
-  height: 100px;
-  width: 400px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  background: #F1F1F1;
+  height: 100%;
   align-items: center;
   justify-content: space-evenly;
-  border-radius: 5px;
+  border: 2px solid #F1F1F1;
+  border-radius: 10px;
   padding: 20px 15px;
-  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
 }
 
 .wrapper .option {
-  background: #fff;
+  background: #F1F1F1;
   height: 100%;
-  width: 100%;
+  width: 90%;
+  margin: 0px 0;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  margin: 0 10px;
-  border-radius: 5px;
+  background-color: #F1F1F1;
+  border-radius: 10px;
   cursor: pointer;
   padding: 0 10px;
-  border: 2px solid lightgrey;
+  border: 2px solid #F1F1F1;
   transition: all 0.3s ease;
 }
 
 .wrapper .option .dot {
   height: 20px;
   width: 20px;
+  margin: 7px 0;
   background: #d9d9d9;
   border-radius: 50%;
   position: relative;
@@ -466,30 +469,43 @@ input[type=radio] {
 }
 
 #option-1:checked:checked ~ .option-1,
-#option-2:checked:checked ~ .option-2 {
-  border-color: #0069d9;
-  background: #0069d9;
+#option-2:checked:checked ~ .option-2,
+#option-3:checked:checked ~ .option-3,
+#option-4:checked:checked ~ .option-4,
+#option-5:checked:checked ~ .option-5 {
+  width: 100% !important;
+  border-color: #1677FE !important;
+  background: #1677FE !important;
 }
 
-#option-1:checked:checked ~ .option-1 .dot,
-#option-2:checked:checked ~ .option-2 .dot {
-  background: #fff;
-}
-
-#option-1:checked:checked ~ .option-1 .dot::before,
-#option-2:checked:checked ~ .option-2 .dot::before {
-  opacity: 1;
-  transform: scale(1);
+#option-1:hover:hover ~ .option-1,
+#option-2:hover:hover ~ .option-2,
+#option-3:hover:hover ~ .option-3,
+#option-4:hover:hover ~ .option-4,
+#option-5:hover:hover ~ .option-5 {
+  border-color: #D4D4D4 !important;
+  background: #D4D4D4 !important;
 }
 
 .wrapper .option span {
-  font-size: 20px;
+  font-size: 24px;
   color: #808080;
 }
 
 #option-1:checked:checked ~ .option-1 span,
-#option-2:checked:checked ~ .option-2 span {
+#option-2:checked:checked ~ .option-2 span,
+#option-3:checked:checked ~ .option-3 span,
+#option-4:checked:checked ~ .option-4 span,
+#option-5:checked:checked ~ .option-5 span {
   color: #fff;
+}
+
+#option-1:hover:hover ~ .option-1 span,
+#option-2:hover:hover ~ .option-2 span,
+#option-3:hover:hover ~ .option-3 span,
+#option-4:hover:hover ~ .option-4 span,
+#option-5:hover:hover ~ .option-5 span {
+  color: #808080;
 }
 
 .btn {
@@ -503,6 +519,14 @@ input[type=radio] {
   width: 100%;
   margin: 0em;
   border-radius: 1em;
+}
+
+.blue-back:active {
+  background: #1156B5;
+}
+
+.sidebarfinal {
+  box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.1);
 }
 
 /*# sourceMappingURL=styles.css.map */

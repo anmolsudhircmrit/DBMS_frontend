@@ -15,6 +15,7 @@ import RIDEH_ICON from '../assets/images/ridehistory.svg'
 export default function SideBarCollapsed() {
 
   return (
+    <div className="sidebarfinal" style={{height : '100%'}}>
 
     <Col className="side-menu-collapsed">
 
@@ -31,9 +32,6 @@ export default function SideBarCollapsed() {
       </div>
 
       <hr className="my-4" />
-
-
-
 
       <nav className="flex-column nav">
 
@@ -124,6 +122,8 @@ export default function SideBarCollapsed() {
       </nav>
 
     </Col>
+
+    </div>
 
   );
 

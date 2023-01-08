@@ -6,7 +6,7 @@ import DestinationPlacesSearch from'../components/DestinationPlaceSearch.js'
 import SourcePlacesSearch from '../components/SourcePlacesSearch.js'
 import axios from 'axios'
 import {Row, Col, Container, Card} from 'react-bootstrap'
-import SidebarComp from "../components/SidebarComp";
+import SidebarComp from "./SidebarComp.js";
 
 
 function Db() {
@@ -15,21 +15,13 @@ function Db() {
   const [sourceSelected, setSourceSelected] = useState(true)
   const [destSelected, setDestSelected] = useState(false)
   const [modelSelected, setModelSelected] = useState(false)
-  const [source, setSource] = useState('Current Location')
-  const [dest, setDest] = useState('')
-  //const [Model, setModel] = useState('')
-  let model;
 
-  const changeSourceSelected = (value, sourc) => {
+  const changeSourceSelected = (value) => {
     setSourceSelected(value)
-    setSource(sourc)
-    console.log(source)
   }
 
-  const changeDestSelected = (value, destin) => {
+  const changeDestSelected = (value) => {
     setDestSelected(value)
-    setDest(destin)
-    console.log(dest)
   }
 
   let map;
@@ -85,12 +77,7 @@ function Db() {
 
   //navigator.geolocation.getCurrentPosition(success, err, options);
   const handleCheckout = () => {
-    const data = JSON.stringify({
-      source, model, dest, payment:"initiated"
-    })
-    localStorage.setItem("data",data);
     axios.post("http://localhost:7070/api/v1/create-checkout",{price:100000, qty:2}).then(response => {
-
       console.log(response.data);
       window.location.href = response.data;
       
@@ -150,7 +137,7 @@ function Db() {
                     }}>
                       <div className="wrapper">
                         {optionArray.map((option,index) => <>
-                            <input name="select" type={'radio'} value={option.value} key={index} id={`option-${index+1}`} onChange={(e) => {setModelSelected(true); model = (e.target.value); console.log(model)}} />
+                            <input name="select" type={'radio'} value={option.value} key={index} id={`option-${index+1}`} onChange={() => {setModelSelected(true)}} />
                             <label htmlFor={`option-${index+1}`} className={`option option-${index+1}`}>
                               <span>{option.label}</span>
                             </label>
@@ -159,12 +146,19 @@ function Db() {
                       </div>
                       <Card style={{marginBottom : '1em'}}>
                         <Card.Body>
-                          <Card.Title>{(sourceSelected && destSelected && modelSelected) ? 'RSRS' : 'Select Modes'}</Card.Title>
+                          <Card.Title>360 Rs.</Card.Title>
                           <Card.Subtitle className="mb-2 text-muted">Test Payment</Card.Subtitle>
+                          {/* <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltip}
+                          >
+                            <Button style ={{width : '100%', margin : '0px', fontSize : '18px'}} disabled = {(sourceSelected && destSelected && modelSelected) ? false : true} onClick={handleCheckout}>Pay and Book</Button>
+                          </OverlayTrigger> */}
                           {
                             (sourceSelected && destSelected && modelSelected) ?
                               <Button style ={{width : '100%', margin : '0px', fontSize : '18px'}} onClick={handleCheckout}>Pay and Book</Button>
-                              :
+                            :
                               <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Select All the Required Fields to Book</Tooltip>}>
                                 <span className="d-inline-block" style={{width : '100%', margin : '0px' }} >
                                   <Button disabled style={{ pointerEvents: 'none', fontSize : '18px', width : '100%', margin : '0px'}}>

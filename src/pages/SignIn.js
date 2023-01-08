@@ -1,23 +1,25 @@
 import React from "react";
 import { Col, Row, Image } from "antd";
 import {CarFilled} from "@ant-design/icons"
-import SIGNUP_BG from "../assets/images/app-image.svg";
+import SIGNUP_BG from "../assets/images/illus2.png";
 import AuthenticationForm from "../components/AuthenticationForm";
 
-function SignIn() {
+function SignIn({authentication}) {
   return (
     <div>
       <div
         style={{
-          color: "#6D7A55",
+          //color: "#0070E1",
           padding: "0.5em",
           margin: 0,
           fontSize: 32,
           fontWeight: 700,
         }}
       >
-        <CarFilled style={{ margin: "10px" }} />
+        <span>
+        <CarFilled style={{ margin: '10px'}} />
         Ride Booking System
+        </span>
       </div>
       <Row
         className="vh-100"
@@ -29,25 +31,25 @@ function SignIn() {
           marginLeft: "2em",
           marginRight : '2em',
           borderRadius: "2em",
-          background: "#D7D7D7",
+          background: "#eaeaea",
         }}
       >
         <Col
           className="align-center p-4"
-          style={{ marginTop: "2.5em" }}
+          style={{ marginTop: "4.5em" }}
           span={10}
         >
-          <AuthenticationForm />
+          <AuthenticationForm authentication = {authentication}/>
         </Col>
         <Col
           className="align-center p-4"
           span={14}
           style={{
-            background: "#4F583F",
+            // background: "#4F583F",
             borderRadius: '2em',
           }}
         >
-          <Image preview={false} src={SIGNUP_BG} />
+          <Image style = {{borderRadius : '1em'}} preview={false} src={SIGNUP_BG} />
         </Col>
       </Row>
     </div>

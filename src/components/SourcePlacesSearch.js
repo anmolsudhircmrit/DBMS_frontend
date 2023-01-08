@@ -3,7 +3,7 @@ import { AutoComplete } from "antd";
 import axios from "axios";
 import { MAP_MY_INDIA_ID, MAP_MY_INDIA_SECRET, MAP_MY_INDIA_GRANT } from "../constants";
 
-function SourcePlacesSearch({placeholder}) {
+function SourcePlacesSearch({changeSourceSelected}) {
 
     const opts = [
         { label: "New Delhi, Delhi", value: "New Delhi, Delhi" },
@@ -34,6 +34,7 @@ function SourcePlacesSearch({placeholder}) {
   ];
     console.log(MAP_MY_INDIA_GRANT, MAP_MY_INDIA_ID)
   const [searchResults, setsearchResults] = useState([]);
+  const [eLoc, setELoc] = useState([])
 
   const handleOnChange = async (value) => {
     const access_token = localStorage.getItem("placeKey");
@@ -52,6 +53,11 @@ function SourcePlacesSearch({placeholder}) {
           label: x.formattedAddress,
           value: x.formattedAddress,
         }));
+        const eLoc = placeSearchResponse.data.copResults.map((x) => ({
+            label : x.formattedAddress,
+            eloc : x.eLoc,
+        }))
+        setELoc(eLoc);
         setsearchResults(places);
     }
     else {
@@ -68,7 +74,13 @@ function SourcePlacesSearch({placeholder}) {
         if (placeSearchResponse && placeSearchResponse.data) {
           const places = placeSearchResponse.data.copResults.map(
             (x) => ({label: x.formattedAddress, value: x.formattedAddress})
+
           );
+          const eLoc = placeSearchResponse.data.copResults.map((x) => ({
+            label : x.formattedAddress,
+            eloc : x.eLoc,
+          }))
+          setELoc(eLoc);
           console.log("\n\n" + places + "\n\n")
           setsearchResults(places);
         }
@@ -95,16 +107,37 @@ function SourcePlacesSearch({placeholder}) {
     return responseToken;
   };
 
+  const handleOnSelect = (value) => {
+    changeSourceSelected(true)
+    let username = localStorage.getItem('username')
+    for(let i = 0; i < eLoc.length; i++){
+        if(eLoc[i].label === value){
+            let loc = eLoc[i].eloc;
+            console.log(eLoc[i])
+            console.log(loc)
+            axios.post('http://localhost:7070/api/v1/updateloc', {username, loc})
+            .then((response) => {
+              console.log(response.data)
+            })
+            .catch((err) => console.log(err))
+            break;
+        }
+
+    }
+  }
+
   return (
       <AutoComplete showSearch
         style={{width: '100%', margin : '0.5em', zIndex : 9999}}
         size='large'
         allowClear = {true}
-        autoFocus = {placeholder === 'Enter Destination'? true : false}
-        defaultOpen = {placeholder === 'Enter Destination'? true : false}
-        onSearch= {handleOnChange}//{(value) => {console.log(value)}}//{handleOnChange}
-        options={searchResults}
-        placeholder="Enter Pickup Location" />
+        //defaultOpen = {true}
+        defaultValue = "Current Location"
+        onSelect= {(val)=>{console.log(val); changeSourceSelected(true, val)}}//{handleOnSelect}
+        onSearch= {(value) => {console.log(value)}}//{handleOnChange}//
+        options={opts}
+        placeholder="Enter Pickup Location"
+        onClear={() => {changeSourceSelected(false)}} />
   )
 }
 
