@@ -12,16 +12,17 @@ function OrderSuccess() {
         // get the order data from storage and set the payment as completed or paid
         // send a post api request to backend to save the order data
         let data = localStorage.getItem('data')
-        // axios.post('http://localhost:7070/api/v1/confirmride', {data})
-        // .then((response) => {
-        //     if(response.data){
-        //         setLoading(false)
-        //     }
-        // })
-        // .catch((err) => console.log(err))
-        setTimeout(() => {
-            setLoading(false)
-        }, 6000)
+        let username = localStorage.getItem('username')
+        axios.post('http://localhost:7070/api/v1/confirmride', {data, username})
+        .then((response) => {
+            if(response.data){
+                setLoading(false)
+            }
+        })
+        .catch((err) => console.log(err))
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 6000)
     },[]);
   return (
     <div style={{display : 'flex', alignItems : 'center', justifyContent : 'center'}}>

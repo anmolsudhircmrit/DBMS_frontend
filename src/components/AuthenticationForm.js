@@ -7,15 +7,20 @@ import axios from 'axios';
 //const { useToken } = theme;
 function AuthenticationForm({authentication}) {
   // const { token } = useToken();
+    const [atStartUser, setAtStartUser] = useState(true)
+    const [atStartPass, setAtStartPass] = useState(true)
     const [form] = Form.useForm();
     const [isForgotPassword, setIsForgotPassword] = useState(false)
     const [formLayout, setFormLayout] = useState('vertical');
     const [signupToggle, setSignupToggle] = useState(false);
     const [logggedIn, setLogggedIn] = useState(true)
+    const [signup, setSignup] = useState(true)
     const [username, setusername] = useState('');
     const [password, setpassword] = useState('');
     const [name, setName] = useState('')
     const [loading, setLoading] = useState(false)
+    const [validateUsername, setValidateUsername] = useState(false)
+    const [validatePassword, setValidatePassword] = useState(false)
     const onFormLayoutChange = ({ layout }) => {
         setFormLayout(layout);
     };
@@ -67,6 +72,7 @@ function AuthenticationForm({authentication}) {
           else{
             setLogggedIn(false)
           };
+          setLoading(false)
         })
         .catch((e) => {
           console.log(e)
@@ -85,10 +91,17 @@ function AuthenticationForm({authentication}) {
     }
 
         const handleSignUp = () => {
+          setLoading(true)
           console.log(username, password, name)
           axios.post("http://localhost:7070/api/v1/signup", {username, password, name})
           .then((response) => {
-            console.log(response.data);
+            if(response.data === 'error'){
+              setSignup(false)
+            }
+            else{
+              console.log(response.data)
+            }
+            setLoading(false)
           })
           .catch((e) => console.log(e));
         }
@@ -96,6 +109,14 @@ function AuthenticationForm({authentication}) {
         const handleForgotPassword = () => {
           console.log('Handled')
         }
+
+        const onFinish = (values) => {
+          console.log('Success:', values);
+        };
+
+        const onFinishFailed = (errorInfo) => {
+          console.log('Failed:', errorInfo);
+        };
 
         return (
           <div
@@ -134,10 +155,12 @@ function AuthenticationForm({authentication}) {
               initialValues={{
                 layout: formLayout,
               }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
               onValuesChange={onFormLayoutChange}
             >
               {signupToggle && (
-                <Form.Item colon = {true} label="Name : ">
+                <Form.Item colon = {true} label="Name : " rules={[{ required: true, message: 'Please input your Name!' }]}>
                   <Input 
                     onChange = {(e) => setName(e.target.value)}
                     placeholder="Name" 
@@ -145,28 +168,49 @@ function AuthenticationForm({authentication}) {
                     type="text" />
                 </Form.Item>
               )}
-              <Form.Item colon = {true} label="Username : ">
+              <Form.Item style={{marginBottom : '0px !important'}} colon = {true} label="Username : " rules={[{ required: true, message: 'Please input your username!' }]}>
+                {validateUsername? 
+                null 
+                  :
+                  (atStartUser)?
+                null:
+                  // <Form.Item style={{marginTop : '0px !important'}} wrapperCol={{ offset: 0 }}>
+                    <span style={{fontSize : '12px', color : 'red', marginTop : '0px', marginBottom : '100em'}}>(Username must be 8 charactes Long)</span> 
+                  // </Form.Item>
+              }
                 <Input
-                  onChange={(e) => setusername(e.target.value)}
+                  onChange={(e) => {setusername(e.target.value);console.log(typeof e.target.value);console.log(e.target.value.length); if(e.target.value.length >= 8){console.log('validating'); setValidateUsername(true);console.log(validatePassword)}; if(e.target.value.length < 8){setValidateUsername(false)}; if(e.target.value.length > 0){setAtStartUser(false)}}}
                   placeholder="example@example.com"
                   size="large"
                   type="email"
                 />
               </Form.Item>
+              
               <Form.Item
                 colon = {true}
                 style={{ marginBottom: signupToggle ? 32 : 0 }}
                 label="Password : "
+                rules={[{ required: true, message: 'Please input the password!' }]}
               >
+                {validatePassword ? 
+                null 
+                  :
+                // <Form.Item wrapperCol={{ offset: 0 }}>
+                (atStartPass)?
+                null:
+                  <span style={{fontSize : '12px', color : 'red', marginTop : '0px'}}>(Password must be 8 charactes Long)</span> 
+                // </Form.Item>
+              }
                 <Input
                   placeholder="Password"
                   size="large"
                   type="password"
                   defaultValue={""}
-                  onChange={(e) => setpassword(e.target.value)}
+                  onChange={(e) => {setpassword(e.target.value);console.log(e.target.value.length); if(e.target.value.length >= 8){console.log('validating');setValidatePassword(true); console.log(validatePassword)}; if(e.target.value.length < 8){setValidatePassword(false)}; ; if(e.target.value.length > 0){setAtStartPass(false)}}}
                 />
               </Form.Item>
-              {!signupToggle && (
+              
+              {/* {!signupToggle && (
                 <Form.Item wrapperCol={{ offset: 0 }}>
                   <span
                     onClick = {() => {
@@ -182,17 +226,19 @@ function AuthenticationForm({authentication}) {
                     Forgot Password?
                   </span>
                 </Form.Item>
-              )}
+              )} */}
               <Form.Item {...buttonItemLayout}>
                 <Link>{
                   <Button
+                    disabled = {!(validateUsername && validatePassword)}
                     loading = {loading}
                     onClick={signupToggle?handleSignUp:handleSignIn}
                     type="primary"
                     size="large"
+                    style={{ marginTop : signupToggle ? '0em' : '2em' }}
                     block
                   >
-                    {signupToggle ? "Sign Up" : "Sign In"}
+                    { !(validateUsername && validatePassword) ? 'Enter Valid Details' : (signupToggle ? "Sign Up" : "Sign In")}
                   </Button>
                 }</Link>
               </Form.Item>
@@ -200,6 +246,7 @@ function AuthenticationForm({authentication}) {
 
             {/* Link to signup */}
             {logggedIn? null : <span style = {{fontSize :'1em', color : 'red', fontWeight : '100', paddingBottom : '15px'}}>Check Credentials and try again</span>}
+            {signup? null : <span style = {{fontSize :'1em', color : 'red', fontWeight : '100', paddingBottom : '15px'}}>Username Taken</span>}
             <span>
               {`${
                   signupToggle
@@ -209,6 +256,7 @@ function AuthenticationForm({authentication}) {
               <span
                 onClick={() => {
                   setLogggedIn(true)
+                  setSignup(true)
                   setSignupToggle(!signupToggle);
                 }}
                 style={{ cursor: "pointer", color: "#1677ff" }}

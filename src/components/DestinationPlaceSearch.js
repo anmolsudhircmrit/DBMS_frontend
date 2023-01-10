@@ -3,7 +3,7 @@ import { AutoComplete } from "antd";
 import axios from "axios";
 import { MAP_MY_INDIA_ID, MAP_MY_INDIA_SECRET, MAP_MY_INDIA_GRANT } from "../constants";
 
-function DestinationPlacesSearch({changeDestSelected,testCallback}) {
+function DestinationPlacesSearch({isConfirmed, disabled,changeConfirmed,changeDestSelected,testCallback}) {
 
     const opts = [
             {
@@ -41,7 +41,7 @@ function DestinationPlacesSearch({changeDestSelected,testCallback}) {
     const [searchResults, setsearchResults] = useState([]);
     const [eLoc, setELoc] = useState([])
 
-  const handleOnChange = async (value) => {
+   const handleOnChange = async (value) => {
     const access_token = localStorage.getItem("placeKey");
     console.log('\n\n\n' + access_token)
     let placeSearchResponse = await axios.get(
@@ -113,11 +113,15 @@ function DestinationPlacesSearch({changeDestSelected,testCallback}) {
     return responseToken;
   };
 
-  let destination;
+  //let destination;
   const handleOnSelect = (value) => {
-    changeDestSelected(true)
+    console.log(eLoc)
+    console.log('handling onSelect')
+    changeDestSelected(true, value)
     for(let i = 0; i < eLoc.length; i++){
         if(eLoc[i].label === value){
+            console.log('location matched')
+            console.log(eLoc[i].label)
             testCallback(eLoc[i]);
             break;
         }
@@ -126,17 +130,17 @@ function DestinationPlacesSearch({changeDestSelected,testCallback}) {
 
   return (
       <AutoComplete showSearch
-        style={{width: '100%', margin : '0.5em', zIndex : 9999}}
+        disabled = {disabled || isConfirmed}
+        style={{width: '90%', margin : '0.5em'}}
         size='large'
         allowClear = {true}
         autoFocus = {true }
-        //defaultOpen = {true}
-        onChange= {(value) => {console.log(value)}}//{handleOnChange}
+        onChange= {handleOnChange}//{(value) => {console.log(value)}}//
         //onSearch= {handleOnChange}//{(value) => {console.log(value)}}//{handleOnChange}//
-        options={opts}
+        options={searchResults}
         placeholder="Search Destination" 
-        onSelect = {(val) => {console.log(val);changeDestSelected(true, val)}}//{handleOnSelect}/>
-        onClear={() => {changeDestSelected(false)}}
+        onSelect = {handleOnSelect}//{(val) => {console.log(val);changeDestSelected(true, val)}}//
+        onClear={() => {changeDestSelected(false, ''); changeConfirmed(false)}}
         />
   )
 }

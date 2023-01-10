@@ -4,10 +4,13 @@ import DestinationPlacesSearch from'../components/DestinationPlaceSearch.js'
 import axios from 'axios'
 import {Row, Col, Container, Card} from 'react-bootstrap'
 import SidebarComp from "../components/SidebarComp";
+import VehicleModal from "../components/VehicleModal.js";
+import { Link } from "react-router-dom";
+import {CSSTransition} from 'react-transition-group';
 
 
-function Dashboard() {
-  const optionArray = [{label:'Any', value:'any'}, {label:'Auto', value:'auto'}, {label:'SUV', value:'suv'}, {label:'HatchBack', value:'hatchback'}, {label:'Sedan', value:'sedan'}]
+function DashBoardNew() {
+    const [modalShow, setModalShow] = useState(false);
   const [destSelected, setDestSelected] = useState(false)
   const [modelSelected, setModelSelected] = useState(false)
   const [source, setSource] = useState('Current Location')
@@ -18,6 +21,8 @@ function Dashboard() {
   const [rideFound, setRideFound] = useState(false)
   const [rideNotFound, setRideNotFound] = useState(false)
   const [model, setModel] = useState('')
+  const [isConfirmed, setIsConfirmed] = useState(false)
+  
   // let model;
   //console.log(window.MapmyIndia)
   const mapRef = useRef()
@@ -29,7 +34,9 @@ function Dashboard() {
   }
 
   const changeDestSelected = (value, destin) => {
+    //setModelSelected(value)
     setDestSelected(value)
+    setIsConfirmed(value)
     setDest(destin)
     console.log(dest)
   }
@@ -85,15 +92,8 @@ function Dashboard() {
       }
     })
     .catch((err) => console.log(err))
-
-    // axios.get(`https://apis.mapmyindia.com/advancedmaps/v1/3d3605631a79f428ea7c80ef7611d74e/rev_geocode?lat=${lat}&lng=${long}&region=IND`)
-    // .then((response) => {
-    //   console.log('The resules are : ')
-    //   console.log(response.data.results)
-    //   console.log(response.data.results[0].formatted_address)
-    //   changeSourceSelected(response.data.results[0].formatted_address)
-    // })
-    // .catch((err) => console.log(err))
+    console.log('map : ')
+    console.log(map)
   }
 
   function err(e){
@@ -102,14 +102,17 @@ function Dashboard() {
 
   useEffect(() => {
     mapRef.current.id = 'map';
-    //map = new window.MapmyIndia.Map('map', { center: [28.61, 77.23], zoomControl: true, hybrid: true, search: true, location: true });
-    //navigator.geolocation.getCurrentPosition(success, err, options);
+    map = new window.MapmyIndia.Map('map', { center: [28.61, 77.23], zoomControl: true, hybrid: true, search: true, location: true });
+    navigator.geolocation.getCurrentPosition(success, err, options);
   }, [])
   
   const handleCheckout = () => {
     console.log(source)
+    let lat = localStorage.getItem('lat')
+    let long = localStorage.getItem('long')
+    let lat_long = lat + ',' + long
     const data = JSON.stringify({
-      source, model, dest, vehicle, price
+      source, model, dest, vehicle, price, lat_long
     })
     localStorage.setItem("data",data);
     axios.post("http://localhost:7070/api/v1/create-checkout",{price:parseInt(price*100), qty:1}).then(response => {
@@ -127,17 +130,15 @@ function Dashboard() {
     console.log(elocObj, crd)
     console.log('testCallback called')
     console.log(map)
-    if(dir !== undefined){
-      dir.remove();
-    }
-    dir = window.MapmyIndia.direction({map:map,start:`${latitude},${longitude}`,end:{label:elocObj.label,geoposition:elocObj.eloc}});
+    window.MapmyIndia.direction({map:map,start:`${latitude},${longitude}`,end:{label:elocObj.label,geoposition:elocObj.eloc}});
   }
 
   const handelModelChange = (e) => {
     console.log("event : " + e)
     setModelSelected(true); 
     console.log("Model : " + e.target.value)
-    setModel(e.target.value)
+    let mod = e.target.value
+    setModel(mod.toUpperCase())
     if(rideFound){
       setRideFound(false)
       setisConfirm(false)
@@ -146,6 +147,7 @@ function Dashboard() {
   }
 
   const handleConfirm = () => {
+    setRideNotFound(false)
     setIsLoadind(true)
     let username = localStorage.getItem('username')
     console.log(model)
@@ -165,8 +167,12 @@ function Dashboard() {
     .catch((err) => {console.log(err)})
   }
 
+  let p = {
+    
+  }
+
   return (
-    <div style={{display:'flex',flexDirection:'row', height : '100vh', width : '100vw', padding : 0,margin : 0}}>
+    <div style={{display:'flex',flexDirection:'row', height : '100vh', width : '100vw', padding : 0,margin : 0, backgroundColor : '#F1F1F1'}}>
         <SidebarComp className = 'sidebarfinal'/>
         {/* <div style = {{height : '100%', width : collapsed ? '12px' : '20px', background : '#D2D2D2', cursor : 'pointer', borderRadius : '0.5em'}} onClick = {() => setCollapsed(!collapsed)}/> */}
         {/* <div style = {{height : '100%', width : '100%', margin : '0em', alignText : 'centre', backgroundColor : 'red'}}>
@@ -179,7 +185,10 @@ function Dashboard() {
                         <Col>
                             <div style = {{display : 'flex', color : 'black', height : '100%', width : '100%'}}>
                                 {/* <SourcePlacesSearch changeSourceSelected = {changeSourceSelected}/> */}
-                                <DestinationPlacesSearch disabled={false} changeConfirmed = {changeConfirmed} changeDestSelected = {changeDestSelected} testCallback = {testCallback}/>
+                                <DestinationPlacesSearch isConfirmed={isConfirmed} disabled={false} changeConfirmed = {changeConfirmed} changeDestSelected = {changeDestSelected} testCallback = {testCallback}/>
+                                {/* <Link to = '/'> */}
+                                    <Button style={{marginLeft : '0px',marginRight : '0px', marginBottom : '0px', width : '17%', height : '100%', marginTop : '11px', fontSize : '14px'}} onClick = {() => {window.location.reload()}}>Change Destination</Button>
+                                {/* </Link> */}
                             </div>
                         </Col>
                     </Row>
@@ -200,24 +209,73 @@ function Dashboard() {
                     </Row>
                 </Col>
                 <Col xs = {2}>
-                    <div style={{
-                      display : 'flex',
-                      flexDirection : 'column',
-                      height : '100%',
+                    <div style={{display : 'flex',
+                      overflow : 'scroll', 
+                      maxHeight : '100vh',
+                      overflow : 'scroll',
+                      backgroundColor : '#F1F1F1'
                     }}>
-                      <div className="wrapper">
-                        {optionArray.map((option,index) => <>
+                    <div style={{
+                      display : 'flex', 
+                      maxHeight : '100%',
+                      overflow : 'scroll',
+                      flexDirection : 'column',
+                      justifyContent : 'center',
+                      //height : '100%',
+                    }}>
+                    <Card style={{marginTop : '1em',marginBottom : '1em'}}>
+                        <Card.Body>
+                          <Card.Title>SOURCE</Card.Title>
+                          <Card.Text>
+                            <span>{source}</span>
+                          </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card style={{marginBottom : '1em'}}>
+                        <Card.Body>
+                          <Card.Title>DESTINATION</Card.Title>
+                          <Card.Text>
+                            <span>{destSelected? dest : 'Destination Not Selected'}</span>
+                          </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card style={{marginBottom : '1em'}}>
+                        <Card.Body>
+                            <Card.Title>VEHICLE MODEL</Card.Title>
+                          <Card.Text>{( modelSelected) ? `${model}`  : 'No Model Selected'}</Card.Text>
+                          <div style={
+                            {
+                                display : 'flex',
+                                height : '100%'
+                            }
+                        }>
+                            <Button disabled = {!destSelected} variant="primary" style={{width : '100%', margin : '0px', fontSize : '16px'}} onClick={() => setModalShow(true)}>
+                                Select Vehicle
+                            </Button>
+
+                            <VehicleModal
+                                handelModelChange = {handelModelChange}
+                                show = {modalShow}
+                                onHide = {() => setModalShow(false)}
+                            />
+                        </div>
+                        </Card.Body>
+                      </Card>
+                      {/* <div className="wrapper">
+                        {/* {optionArray.map((option,index) => <>
                             <input name="select" type={'radio'} value={option.value} key={index} id={`option-${index+1}`} onChange={(e) => { console.log(e);handelModelChange(e)}} />
                             <label htmlFor={`option-${index+1}`} className={`option option-${index+1}`}>
                               <span>{option.label}</span>
                             </label>
                           </>
-                        )}
+                        )} */}
+                        {/* <VehicleModal props = {{}}/> */}
+
                        {/* <input name="select" type={'radio'} value={option.value} key={index} id={`option-${index+1}`} onChange={(e) => { console.log(e);handelModelChange(e)}} />
                             <label htmlFor={`option-${index+1}`} className={`option option-${index+1}`}>
                               <span>{option.label}</span>
                             </label> */}
-                      </div>
+                      {/* </div> */} 
                       <Card style={{marginBottom : '1em'}}>
                         <Card.Body>
                           {(destSelected && modelSelected) ?
@@ -237,24 +295,23 @@ function Dashboard() {
                           {rideNotFound ? <Card.Text style={{marginTop : '1em', marginLeft : '0.7em', color :'red'}}>Sorry, Couldn't Find Ride'</Card.Text> : null}
                         </Card.Body>
                       </Card>
-                      <Card style={{marginBottom : '1em'}}>
-                        <Card.Body>
-                          <Card.Title>{( isConfirm) ? `${price}` : 'Select Modes'}</Card.Title>
-                          <Card.Subtitle className="mb-2 text-muted" style={{fontSize: '14px'}}>Continue With Payment</Card.Subtitle>
-                          {
-                            ( isConfirm) ?
+                    {( isConfirm) ? 
+                    <CSSTransition
+                        transitionName="example"
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={300}
+                    >
+                        <Card style={{marginBottom : '1em'}} key = 'transition-group'>
+                            <Card.Body>
+                              <Card.Title>{( isConfirm) ? `${price}` : 'Select Modes'}</Card.Title>
+                              <Card.Subtitle className="mb-2 text-muted" style={{fontSize: '14px'}}>Continue With Payment</Card.Subtitle>
                               <Button style ={{width : '100%', margin : '0px', fontSize : '18px'}} onClick={handleCheckout}>Pay and Book</Button>
-                              :
-                              <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Please Confirm before Booking</Tooltip>}>
-                                <span className="d-inline-block" style={{width : '100%', margin : '0px' }} >
-                                  <Button disabled style={{ pointerEvents: 'none', fontSize : '18px', width : '100%', margin : '0px'}}>
-                                    Pay and Book
-                                  </Button>
-                                </span>
-                              </OverlayTrigger>
-                          }
-                        </Card.Body>
-                      </Card>
+                            </Card.Body>
+                        </Card>
+                      </CSSTransition>
+                      : null
+                    }
+                    </div>
                     </div>
                 </Col>
             </Row>
@@ -263,4 +320,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default DashBoardNew

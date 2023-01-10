@@ -108,7 +108,7 @@ function SourcePlacesSearch({changeSourceSelected}) {
   };
 
   const handleOnSelect = (value) => {
-    changeSourceSelected(true)
+    changeSourceSelected(true, value)
     let username = localStorage.getItem('username')
     for(let i = 0; i < eLoc.length; i++){
         if(eLoc[i].label === value){
@@ -137,7 +137,7 @@ function SourcePlacesSearch({changeSourceSelected}) {
         onSearch= {(value) => {console.log(value)}}//{handleOnChange}//
         options={opts}
         placeholder="Enter Pickup Location"
-        onClear={() => {changeSourceSelected(false)}} />
+        onClear={() => {changeSourceSelected(false, '')}} />
   )
 }
 

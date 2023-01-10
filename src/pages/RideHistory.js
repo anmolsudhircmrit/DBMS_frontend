@@ -13,8 +13,8 @@ function RideHistory() {
   const [loading, setLoading] = useState(true)
   let count;
   let arr = []
-  let username = 'anmol'
   useEffect(  () => {
+        let username = localStorage.getItem('username')
         axios
         .post('http://localhost:7070/api/v1/dashboard/ridehistory', {username})
         .then((response) => {

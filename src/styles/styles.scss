@@ -561,3 +561,29 @@ input[type="radio"]{
 .sidebarfinal{
    box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.1);
 }
+
+.example-enter {
+   opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+   opacity: 1;
+   transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+   opacity: 1;
+}
+
+.example-leave.example-leave-active {
+   opacity: 0.01;
+   transition: opacity 300ms ease-in;
+}
+
+// .ant-form-item{
+//    margin-bottom: 0px !important;
+// }
+
+// .css-dev-only-do-not-override-acm2ia{
+
+// }
