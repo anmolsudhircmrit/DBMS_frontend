@@ -10,7 +10,7 @@ import {CSSTransition} from 'react-transition-group';
 
 
 function DashBoardNew() {
-    const [modalShow, setModalShow] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
   const [destSelected, setDestSelected] = useState(false)
   const [modelSelected, setModelSelected] = useState(false)
   const [source, setSource] = useState('Current Location')
@@ -94,6 +94,14 @@ function DashBoardNew() {
     .catch((err) => console.log(err))
     console.log('map : ')
     console.log(map)
+    // axios.post(`http://localhost:7070/api/v1/rev_geo`, {lat, long})
+    // .then((response) => {
+    //   console.log('The resules are : ')
+    //   //console.log(response.data.results)
+    //   console.log(response.data)
+    //   changeSourceSelected(response.data)
+    // })
+    // .catch((err) => console.log(err))
   }
 
   function err(e){
@@ -102,7 +110,7 @@ function DashBoardNew() {
 
   useEffect(() => {
     mapRef.current.id = 'map';
-    map = new window.MapmyIndia.Map('map', { center: [28.61, 77.23], zoomControl: true, hybrid: true, search: true, location: true });
+    map = new window.MapmyIndia.Map('map', { center: [12.9693346,77.7124368], zoomControl: true, hybrid: true, search: true, location: true });
     navigator.geolocation.getCurrentPosition(success, err, options);
   }, [])
   
@@ -131,6 +139,14 @@ function DashBoardNew() {
     console.log('testCallback called')
     console.log(map)
     window.MapmyIndia.direction({map:map,start:`${latitude},${longitude}`,end:{label:elocObj.label,geoposition:elocObj.eloc}});
+    // axios.post(`http://localhost:7070/api/v1/rev_geo`, {latitude, longitude})
+    // .then((response) => {
+    //   console.log('The resules are : ')
+    //   //console.log(response.data.results)
+    //   console.log(response.data)
+    //   changeSourceSelected(response.data)
+    // })
+    // .catch((err) => console.log(err))
   }
 
   const handelModelChange = (e) => {

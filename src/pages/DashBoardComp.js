@@ -4,6 +4,7 @@ import Dashboard from './Dashboard.js'
 import DashboardInSession from '../components/DashboardInSession.js'
 import { Spinner } from 'react-bootstrap'
 import DashBoardNew from './DashBoardNew.js'
+import SidebarComp from '../components/SidebarComp.js'
 
 function DashBoardComp() {
     const [inSession, setInSession] = useState(true)
@@ -25,8 +26,11 @@ function DashBoardComp() {
         })
     })
   return (
-    <div>{
-            isLoading ? <div style={{display : 'flex', height : '100%', width : '100%', justifyContent : 'center', alignItems : 'center', alignContent : 'center'}}>
+    
+    <div>
+        {
+            isLoading ? 
+             <div style={{display : 'flex', height : '100%', width : '100%', justifyContent : 'center', alignItems : 'center', alignContent : 'center'}}>
                 <Spinner animation="border" variant='primary' style={{ marginTop : '20em'}}>
                     <span className="visually-hidden">Loading...</span>
                 </Spinner>
