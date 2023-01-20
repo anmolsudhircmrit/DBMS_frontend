@@ -580,6 +580,24 @@ input[type="radio"]{
    transition: opacity 300ms ease-in;
 }
 
+.hover1:hover{
+   color: #1677FE !important;
+   font-weight: 600;
+}
+
+.image-hover:hover{
+   cursor: pointer;
+   box-shadow: 0px 0px 2px 2px #D4D4D4;
+}
+
+.btn-edit{
+   margin: 0;
+   //padding: 0;
+   //margin-left: 68.3em;
+   margin-top: 0.3em;
+   width: 100%;
+}
+
 // .ant-form-item{
 //    margin-bottom: 0px !important;
 // }

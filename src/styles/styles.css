@@ -165,7 +165,6 @@ textarea {
 }
 
 .side-menu {
-  position: -webkit-sticky;
   position: sticky;
   top: 3.5rem;
   z-index: 9;
@@ -546,4 +545,22 @@ input[type=radio] {
 .example-leave.example-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
-}/*# sourceMappingURL=styles.css.map */
+}
+
+.hover1:hover {
+  color: #1677FE !important;
+  font-weight: 600;
+}
+
+.image-hover:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 2px 2px #D4D4D4;
+}
+
+.btn-edit {
+  margin: 0;
+  margin-top: 0.3em;
+  width: 100%;
+}
+
+/*# sourceMappingURL=styles.css.map */

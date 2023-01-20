@@ -17,7 +17,7 @@ function HistoryPanel({props}){
                 <Card.Title>Vehicle ID : { props.vehicle_id}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{props.license_no}</Card.Subtitle>
                 <Card.Text>
-                    Source Coordinates : {props.source_loc}
+                    Source : {props.source_loc}
                 </Card.Text>
                 <Card.Text>
                     Destination : {props.destination_loc}

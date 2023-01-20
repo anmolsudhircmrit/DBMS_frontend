@@ -139,14 +139,14 @@ function DashBoardNew() {
     console.log('testCallback called')
     console.log(map)
     window.MapmyIndia.direction({map:map,start:`${latitude},${longitude}`,end:{label:elocObj.label,geoposition:elocObj.eloc}});
-    // axios.post(`http://localhost:7070/api/v1/rev_geo`, {latitude, longitude})
-    // .then((response) => {
-    //   console.log('The resules are : ')
-    //   //console.log(response.data.results)
-    //   console.log(response.data)
-    //   changeSourceSelected(response.data)
-    // })
-    // .catch((err) => console.log(err))
+    axios.post(`http://localhost:7070/api/v1/rev_geo`, {latitude, longitude})
+    .then((response) => {
+      console.log('The resules are : ')
+      //console.log(response.data.results)
+      console.log(response.data)
+      changeSourceSelected(response.data)
+    })
+    .catch((err) => console.log(err))
   }
 
   const handelModelChange = (e) => {
@@ -216,7 +216,10 @@ function DashBoardNew() {
                                         height : '98%', 
                                         width : '100%', 
                                         background : 'grey', 
-                                        borderRadius : '1em'
+                                        borderRadius : '1em',
+                                        borderColor : 'red',
+                                        borderWidth : '20px',
+                                        boxShadow : '0px 0px 8px 8px #dcdcdc'
                                     }
                                 }
                             >
